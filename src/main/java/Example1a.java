@@ -36,6 +36,7 @@ import ij.ImagePlus;
 import ij.io.Opener;
 
 import java.io.File;
+import java.net.URL;
 
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
@@ -56,10 +57,12 @@ public class Example1a
 	public < T extends NumericType< T > & NativeType< T > > Example1a()
 	{
 		// define the file to open
-		File file = new File( "DrosophilaWing.tif" );
+		URL url = Example1a.class.getResource("DrosophilaWing.tif"); //get url from resources
+		File file = new File(url.getPath());
 
-		// open a file with ImageJ
-		final ImagePlus imp = new Opener().openImage( file.getAbsolutePath() );
+		// open a file with ImageJ (by the canonical path)
+		final ImagePlus imp = new Opener().openImage(file.getAbsolutePath());
+		imp.setTitle("DrosophilaWing.tif (ImagePlus)");
 
 		// display it via ImageJ
 		imp.show();
@@ -68,7 +71,7 @@ public class Example1a
 		final Img< T > image = ImagePlusAdapter.wrap( imp );
 
 		// display it via ImgLib using ImageJ
-		ImageJFunctions.show( image );
+		ImageJFunctions.show( image ).setTitle("DrosophilaWing.tif (ImgLib wrap)");
 	}
 
 	public static void main( String[] args )

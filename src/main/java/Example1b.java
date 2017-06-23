@@ -38,6 +38,7 @@ import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
 
 import java.io.File;
+import java.net.URL;
 
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -47,15 +48,15 @@ import net.imglib2.type.numeric.RealType;
 /**
  * Opens a file with SCIFIO's ImgOpener as an ImgLib2 Img.
  */
-public class Example1b
+public class Example1b < T extends RealType< T > & NativeType< T > >
 {
 	// within this method we define <T> to be a RealType and a NativeType which means the
 	// Type is able to map the data into an java basic type array
-	public < T extends RealType< T > & NativeType< T > > Example1b()
-		throws ImgIOException
+	public void Example1bRun() throws ImgIOException
 	{
 		// define the file to open
-		File file = new File( "DrosophilaWing.tif" );
+        URL url = Example1b.class.getResource("DrosophilaWing.tif");
+		File file = new File( url.getPath());
 		String path = file.getAbsolutePath();
 
 		// create the ImgOpener
@@ -64,6 +65,7 @@ public class Example1b
 		// open with ImgOpener. The type (e.g. ArrayImg, PlanarImg, CellImg) is
 		// automatically determined. For a small image that fits in memory, this
 		// should open as an ArrayImg.
+        @SuppressWarnings("unchecked")
 		Img< T > image = (Img< T >) imgOpener.openImg( path );
 
 		// display it via ImgLib using ImageJ
@@ -79,6 +81,7 @@ public class Example1b
 		config.imgOpenerSetImgModes( ImgMode.CELL );
 
 		// open with ImgOpener as a CellImg
+        @SuppressWarnings("unchecked")
 		Img< T > imageCell = (Img< T >) imgOpener.openImg( path, config );
 
 		// display it via ImgLib using ImageJ. The Img type only affects how the
@@ -89,9 +92,11 @@ public class Example1b
 	public static void main( String[] args ) throws ImgIOException
 	{
 		// open an ImageJ window
-		new ImageJ();
+        final ImageJ ij = new ImageJ();
+		ij.show();
 
 		// run the example
-		new Example1b();
+		final Example1b example = new Example1b();
+		example.Example1bRun();
 	}
 }
